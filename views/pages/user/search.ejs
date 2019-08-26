@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <style>
+    .following {
+      background-color: black;
+      color: white;
+    }
+
+    .not-following {
+      background-color: white;
+      color: black;
+    }
+  </style>
+  <body>
+    <div>
+      <%- partial('../../partials/navbar.ejs') %>
+
+      <div id="app" style="padding:16px">
+        <div
+          v-for="u in users"
+          style="background-color:white;margin-bottom :16px; padding:16px;"
+          v-bind:key="u.id"
+        >
+
+         <a :href="'/user/'+u.id">
+                {{ u.fullName }}
+         </a>
+         
+          <div>
+            {{ u.emailAddress }}
+          </div>
+
+          <button
+            v-on:click="follow(u)"
+            v-bind:class="u.isFollowing ? 'following' : 'not-following'"
+            style="margin-top:16px"
+          >
+            {{ u.isFollowing ? "unfollow" : "Follow" }}
+          </button>
+        </div>
+      </div>
+      <%- exposeLocalsToBrowser({keys: ['users']}) %>
+
+      <script>
+        const allUsers = window.SAILS_LOCALS.users;
+        // allUsers.forEach(u=>{
+        //     u.isFollowing = false
+        // })
+
+        const App = new Vue({
+          el: "#app",
+          data: {
+            messsage: "Hello world",
+            users: allUsers
+          },
+          methods: {
+            follow: async function(user) {
+              console.log(user.fullName);
+
+              if (user.isFollowing) {
+                await axios.post("/unfollow/" + user.id);
+              } else {
+                await axios.post("/follow/" + user.id);
+              }
+
+              //toggle isFollowing
+
+              const originalId = user.id;
+              user.id = "TEMP";
+              user.isFollowing = !user.isFollowing;
+              user.id = originalId;
+            }
+          }
+        });
+      </script>
+    </div>
+  </body>
+</html>

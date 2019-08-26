@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>Document</title>
+</head>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<body>
+    <style>
+      
+        .center-cropped {
+          object-position: center;
+          /* Center the image within the element */
+          object-fit: cover;
+          width: 64px;
+          height: 64px;
+          border-radius: 100px;
+          border: solid 1px rgb(94, 94, 94);
+        }
+      </style>
+  <div>
+    <%- partial('../../partials/navbar.ejs') %>
+    <%- exposeLocalsToBrowser({keys: ['user']}) %>
+
+    <div id="app" style="padding: 24px">
+      <div style="font-weight:bold; margin-bottom:8px;">
+          User Information
+
+      </div>
+      <div style="margin-bottom:24px;background-color:white; padding:5px;">
+        {{ user.fullName }}
+        <div style="margin-top:5px;">
+            {{ user.emailAddress }}
+        </div>
+      </div>
+      <div>
+       
+      </div>
+
+      <div style="display: flex; flex: 1">
+        <div style='flex: 1; margin-right: 24px'>
+          <div style="font-weight: bold; margin-bottom: 8px">
+            Currently Following
+          </div>
+
+          <div v-if="!user.following || user.following.length == 0" style="background-color: white; padding: 16px;
+                        margin-bottom: 16px">
+            Not following anyone.
+          </div>
+
+          <div v-for="u in user.following" style="background-color: white; margin-bottom: 16px; padding: 16px">
+            <div>
+              {{u.fullName}}
+            </div>
+            <div>
+              {{u.emailAddress}}
+            </div>
+          </div>
+        </div>
+
+        <div style='flex: 1'>
+          <div style="font-weight: bold; margin-bottom: 8px">
+            Followers
+          </div>
+
+          <div v-if="!user.following || user.follower.length == 0" style="background-color: white; padding: 16px;
+                        margin-bottom: 16px">
+            No followers.
+          </div>
+
+          <div v-for="u in user.follower" style="background-color: white; margin-bottom: 16px; padding: 16px">
+            <div>
+              {{u.fullName}}
+            </div>
+            <div>
+              {{u.emailAddress}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-weight: bold; margin-bottom: 16px">
+        Posts
+      </div>
+
+      <div v-for="p in user.posts" style="background-color:white; margin-bottom:16px">
+        <div style="background-color: white; padding: 16px;
+            margin-bottom: 12px;
+            display: flex; flex-direction: column">
+        <div style="display:flex; margin-block-start: 16px">
+            <img class="center-cropped" :src="p.user.profileImageUrl" style="margin-right:12px">
+  
+            <div style="display: flex; flex-direction:column; justify-content:center">
+              <div style="font-weight: bold; margin-bottom: 4px; font-size:22px">
+                {{ p.user.fullName }}
+              </div>
+  
+              <div style="color: rgb(157, 157, 157); margin-bottom: 4px; margin-top:5px; font-size: 13px">
+                <!-- {{ new Date(p.createdAt).toLocaleTimeString() 
+                        + " "  + new Date(p.createdAt).toLocaleDateString()}} -->
+                Posted {{ p.fromNow }}
+              </div>
+  
+            </div>
+  
+          </div>
+          <div style="margin-bottom: 12px">
+            {{ p.text }}
+          </div>
+
+          <div>
+            <img style="max-width: 100%; margin-bottom: 12px" :src="p.imageUrl" />
+          </div>
+
+          <button v-on:click="deletePost(p)">Delete Post</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const user = window.SAILS_LOCALS.users;
+      // allUsers.forEach(u=>{
+      //     u.isFollowing = false
+      // })
+
+      const App = new Vue({
+        el: "#app",
+        data: {
+          user: window.SAILS_LOCALS.user
+        },
+        methods: {
+          follow: async function (user) {
+            console.log(user.fullName);
+
+            if (user.isFollowing) {
+              await axios.post("/unfollow/" + user.id);
+            } else {
+              await axios.post("/follow/" + user.id);
+            }
+
+            //toggle isFollowing
+
+            const originalId = user.id;
+            user.id = "TEMP";
+            user.isFollowing = !user.isFollowing;
+            user.id = originalId;
+          }
+        }
+      });
+    </script>
+  </div>
+</body>
+
+</html>
