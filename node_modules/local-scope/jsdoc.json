@@ -1,0 +1,26 @@
+{
+  "source": {
+    "include": [
+      "./lib/"
+    ]
+  },
+  "opts": {
+    "recurse": true
+  },
+  "plugins": ["plugins/markdown"],
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true,
+    "default": {
+      "outputSourceFiles": true
+    },
+    "applicationName": "Dreamscapes\\local-scope",
+    "googleAnalytics": "",
+    "linenums": true
+  },
+  "markdown": {
+    "parser": "gfm",
+    "githubRepoName": "local-scope",
+    "githubRepoOwner": "Dreamscapes"
+  }
+}

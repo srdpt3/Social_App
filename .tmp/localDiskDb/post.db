@@ -1,0 +1,6 @@
+{"$$indexCreated":{"fieldName":"id","unique":true,"sparse":false}}
+{"createdAt":1564115872999,"updatedAt":1564115872999,"id":1,"text":"aaa","user":2,"_id":1}
+{"createdAt":1564115874598,"updatedAt":1564115874598,"id":2,"text":"ddd","user":2,"_id":2}
+{"createdAt":1564115875966,"updatedAt":1564115875966,"id":3,"text":"eee","user":2,"_id":3}
+{"createdAt":1564115877532,"updatedAt":1564115877532,"id":4,"text":"asdfasdf","user":2,"_id":4}
+{"createdAt":1564194877272,"updatedAt":1564194877272,"id":5,"text":"ㅁㄴㅇㄹㅁㄴㅇㄹ","user":2,"_id":5}
